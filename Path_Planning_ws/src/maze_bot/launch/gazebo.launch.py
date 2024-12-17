@@ -11,7 +11,7 @@ from scripts import GazeboRosPaths
 
 def generate_launch_description():
     package_share_dir = get_package_share_directory("maze_bot")
-    urdf = os.path.join(package_share_dir, "urdf", "maze_bot.urdf")
+    urdf_file = os.path.join(package_share_dir, "urdf", "maze_bot.urdf")
     
     model_path, plugin_path, media_path = GazeboRosPaths.get_paths()
 
