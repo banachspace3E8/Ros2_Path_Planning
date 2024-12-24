@@ -15,6 +15,7 @@ setup(
         (os.path.join('share', package_name, 'urdf'), glob('urdf/*')),
         (os.path.join('share', package_name, 'meshes'), glob('meshes/*')),
         (os.path.join('share', package_name, 'launch'), glob('launch/*')),
+        (os.path.join('share', package_name, 'worlds'), glob('worlds/*')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -27,6 +28,7 @@ setup(
         'console_scripts': [
             'talker_node = maze_bot.talker:main',
             'subscriber_node = maze_bot.listener:main',
+            'video_recorder = maze_bot.video_saver:main',
         ],
     },
 )
