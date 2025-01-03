@@ -22,7 +22,7 @@ Thats why we use xacros
 
       <visual>
         <geometry>
-            <mesh filename="package://maze_bot/meshes/base_link.stl"/>
+            <mesh filename="package://maze_bot/meshes/Base.stl"/>
         </geometry>
         <material name="gray">
           <color rgba=".2 .2 .2 1" />
@@ -31,7 +31,7 @@ Thats why we use xacros
   
       <collision>
         <geometry>
-          <mesh filename="package://maze_bot/meshes/base_link.stl"/>
+          <mesh filename="package://maze_bot/meshes/Base.stl"/>
       </geometry>
         <contact_coefficients mu="1" mu2="1" kp="1e+13.0" kd="1.0"/>
       </collision>
@@ -55,7 +55,7 @@ Thats why we use xacros
       <visual>
         
         <geometry>
-            <mesh filename="package://maze_bot/meshes/wheel_r.stl"/>
+            <mesh filename="package://maze_bot/meshes/Wheel_R.stl"/>
         </geometry>
 
         <material name="white">
@@ -65,7 +65,7 @@ Thats why we use xacros
   
       <collision>
         <geometry>
-            <mesh filename="package://maze_bot/meshes/wheel_r.stl"/>
+            <mesh filename="package://maze_bot/meshes/Wheel_R.stl"/>
         </geometry>
         <contact_coefficients mu="0" kp="1000.0" kd="1.0"/>
       </collision>
@@ -89,7 +89,7 @@ Thats why we use xacros
       <visual>
         
         <geometry>
-            <mesh filename="package://maze_bot/meshes/wheel_l.stl"/>
+            <mesh filename="package://maze_bot/meshes/Wheel_L.stl"/>
         </geometry>
         
         <material name="white">
@@ -99,7 +99,7 @@ Thats why we use xacros
   
       <collision>
         <geometry>
-            <mesh filename="package://maze_bot/meshes/wheel_l.stl"/>
+            <mesh filename="package://maze_bot/meshes/Wheel_L.stl"/>
         </geometry>
         <contact_coefficients mu="0" kp="1000.0" kd="1.0"/>
       </collision>
@@ -124,14 +124,14 @@ Thats why we use xacros
   
       <visual>
         <geometry>
-          <mesh filename="package://maze_bot/meshes/front_caster.stl"/>
+          <mesh filename="package://maze_bot/meshes/Wheel_F.stl"/>
       </geometry>
         <material name="black" />
       </visual>
   
       <collision>
         <geometry>
-          <mesh filename="package://maze_bot/meshes/front_caster.stl"/>
+          <mesh filename="package://maze_bot/meshes/Wheel_F.stl"/>
       </geometry>
         <contact_coefficients mu="0" kp="1000.0" kd="1.0"/>
       </collision>

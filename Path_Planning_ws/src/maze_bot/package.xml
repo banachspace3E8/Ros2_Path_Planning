@@ -16,8 +16,8 @@
   <test_depend>python3-pytest</test_depend>
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
-
   <export>
     <build_type>ament_python</build_type>
+    <gazebo_ros gazebo_model_path="${prefix}/.." />
   </export>
 </package>
