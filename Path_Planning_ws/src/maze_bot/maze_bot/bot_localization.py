@@ -164,8 +164,9 @@ class bot_localizer(Node):
         frame_disp[car_circular_mask>0] = (0,0,255)
 
         if (config.debug and config.debug_localization):
-            cv2.imshow("Background_Model",self.bg_model)
-            cv2.imshow("Maze_OcupancyGrid",self.maze_og)            
-            cv2.imshow("Car_Localized", frame_disp)
-            cv2.imshow("Change_Mask(Noise Visible)", change_mask) 
-            cv2.imshow("Detected_Car", car_mask)
+            #cv2.imshow("Background_Model",self.bg_model)
+            #cv2.imshow("Maze_OcupancyGrid",self.maze_og)            
+            #cv2.imshow("Car_Localized", frame_disp)
+            #cv2.imshow("Change_Mask(Noise Visible)", change_mask) 
+            #cv2.imshow("Detected_Car", car_mask)
+            pass

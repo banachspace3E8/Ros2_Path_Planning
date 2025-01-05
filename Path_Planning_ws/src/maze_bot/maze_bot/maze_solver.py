@@ -11,6 +11,7 @@ from geometry_msgs.msg import Twist
 import os
 import numpy as np
 from .bot_localization import bot_localizer
+from .bot_mapping import bot_mapper
 
 class maze_solver(Node):
     def __init__(self):
@@ -22,6 +23,7 @@ class maze_solver(Node):
         self.bridge = CvBridge()
         self.vel_msg = Twist()
         self.bot_localizer = bot_localizer()
+        self.bot_mapper = bot_mapper()
         self.sat_view = np.zeros((100,100))
 
     def get_video_feed_cb(self, data):
@@ -33,6 +35,7 @@ class maze_solver(Node):
     def maze_solving(self):
         frame_disp = self.sat_view.copy()
         self.bot_localizer.localize_bot(self.sat_view, frame_disp)
+        self.bot_mapper.graphify(self.bot_localizer.maze_og)
         self.vel_msg.linear.x = 0.3
         self.vel_msg.angular.z = 0.5
         self.publisher_.publish(self.vel_msg)
