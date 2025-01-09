@@ -55,7 +55,8 @@ class bot_mapper():
         print("----------------------) CONNECTED >> {} << ".format(case))
         self.maze_connect = cv2.line(self.maze_connect,curr_pixel,neighbor_pixel,color,1)
         if config.debug and config.debug_mapping:
-            cv2.imshow("Nodes Conected", self.maze_connect)
+            #cv2.imshow("Nodes Conected", self.maze_connect)
+            pass
         if debug_mapping:
             cv2.waitKey(0)                    
             self.maze_connect = cv2.line(self.maze_connect,curr_pixel,neighbor_pixel,(255,255,255),1)
@@ -259,7 +260,7 @@ class bot_mapper():
         self.Graph.graph.clear()
         # Initalizing Maze_connect with Colored Maze
         self.maze_connect = cv2.cvtColor(maze, cv2.COLOR_GRAY2BGR)
-        cv2.namedWindow("Nodes Conected",cv2.WINDOW_FREERATIO)
+        #cv2.namedWindow("Nodes Conected",cv2.WINDOW_FREERATIO)
         # Initialize counts of Interest Points
         turns = 0
         junc_3 = 0
@@ -268,7 +269,7 @@ class bot_mapper():
         maze_bgr = cv2.cvtColor(maze, cv2.COLOR_GRAY2BGR)
         #maze_bgr = np.zeros((maze.shape[0],maze.shape[1],3),np.uint8)
         # Creating a window to display Detected Interest Points
-        cv2.namedWindow("Maze (Interest Points)",cv2.WINDOW_FREERATIO)
+        #cv2.namedWindow("Maze (Interest Points)",cv2.WINDOW_FREERATIO)
         rows = maze.shape[0]
         cols = maze.shape[1]
 
@@ -287,7 +288,8 @@ class bot_mapper():
                             # Start
                             maze_bgr[row][col] = (0,128,255)
                             if config.debug and config.debug_mapping:
-                                cv2.imshow("Maze (Interest Points)",maze_bgr)
+                                #cv2.imshow("Maze (Interest Points)",maze_bgr)
+                                pass
                             # Adding [Found vertex to graph & maze entry to graph-start]
                             self.Graph.add_vertex((row,col),case="_Start_")
                             self.Graph.start = (row,col)
@@ -296,7 +298,8 @@ class bot_mapper():
                             # End (MAze Exit)
                             maze_bgr[row][col] = (0,255,0)
                             if config.debug and config.debug_mapping:
-                                cv2.imshow("Maze (Interest Points)",maze_bgr)
+                                #cv2.imshow("Maze (Interest Points)",maze_bgr)
+                                pass
                             # Adding maze exit to graph-end
                             self.Graph.add_vertex((row,col),case="_End_")
                             self.Graph.end = (row,col)
@@ -360,7 +363,8 @@ class bot_mapper():
                             if draw_intrstpts:
                                 cv2.rectangle(maze_bgr,(col-10,row-10) , (col+10,row+10), (255,215,0),4)
                             if config.debug and config.debug_mapping:
-                                cv2.imshow("Maze (Interest Points)",maze_bgr)
+                                #cv2.imshow("Maze (Interest Points)",maze_bgr)
+                                pass
                             # Adding [Found vertex to graph]
                             self.Graph.add_vertex((row,col),case = "_4-Junc_")
                             # Connecting vertex to its neighbor (if-any)

@@ -5,7 +5,7 @@
 debug = True
 
 debug_localization = False
-debug_mapping = True
+debug_mapping = False
 debug_pathplanning = True
 debug_motionplanning = True
 
