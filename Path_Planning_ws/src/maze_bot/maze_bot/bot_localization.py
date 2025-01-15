@@ -144,7 +144,7 @@ class bot_localizer(Node):
     def localize_bot(self, curr_frame, frame_disp):
 
         if not self.is_bg_extracted:
-            self.extract_bg(curr_frame)
+            self.extract_bg(curr_frame.copy())
             self.is_bg_extracted = True
 
         #Foreground extraction
@@ -162,11 +162,10 @@ class bot_localizer(Node):
         car_circular_mask = cv2.bitwise_xor(car_circular_mask, car_mask)
         frame_disp[car_mask>0] = frame_disp[car_mask>0] + (0, 64, 0)
         frame_disp[car_circular_mask>0] = (0,0,255)
-
         if (config.debug and config.debug_localization):
             #cv2.imshow("Background_Model",self.bg_model)
             #cv2.imshow("Maze_OcupancyGrid",self.maze_og)            
             #cv2.imshow("Car_Localized", frame_disp)
             #cv2.imshow("Change_Mask(Noise Visible)", change_mask) 
             #cv2.imshow("Detected_Car", car_mask)
-            pass
+            cv2.waitKey(1)

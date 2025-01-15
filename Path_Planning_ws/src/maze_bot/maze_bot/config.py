@@ -4,9 +4,9 @@
 
 debug = True
 
-debug_localization = False
+debug_localization = True
 debug_mapping = False
-debug_pathplanning = True
+debug_pathplanning = False
 debug_motionplanning = True
 
 debug_live = False

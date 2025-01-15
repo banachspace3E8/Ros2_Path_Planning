@@ -11,6 +11,10 @@ class bot_pathplanner():
         self.DFS = DFS()
         self.dijkstra = Dijkstra()
         self.astar = a_star()
+        #Computed path from start to end
+        self.path_to_goal = []
+
+        self.img_shortest_path = []
 
     @staticmethod
     def cords_to_pts(cords):
@@ -43,7 +47,7 @@ class bot_pathplanner():
         elif method == "a_star":
             self.astar.shortest_path_overlayed = maze_bgr
             
-        self.img_shortest_path = maze_bgr.copy()
+        self.img_shortest_path = maze_bgr
     
     def find_and_display_path(self, graph, start, end, maze, method="DFS"):
         Path_str = "Path"
@@ -71,10 +75,10 @@ class bot_pathplanner():
             Path_str = "Shortest " + Path_str
 
         pathpts_to_display = self.cords_to_pts(path_to_display)
+        self.path_to_goal = pathpts_to_display
         #print("Found path pts = {}".format(pathpts_to_display))
         self.draw_path_on_maze(maze, pathpts_to_display, method)
         #cv2.waitKey(0)
-    
 
 
 class DFS():
