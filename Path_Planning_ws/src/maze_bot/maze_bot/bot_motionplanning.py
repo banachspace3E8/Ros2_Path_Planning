@@ -43,6 +43,20 @@ class bot_motionplanner():
         self.Prev_distance_to_goal = 0
         self.prev_path_iter = 0
 
+        #Angle or distance or mini-goal
+        self.prev_angle_to_turn = 0
+        self.Prev_distance_to_goal = 0
+        self.prev_path_iter = 0
+        
+        #Variables to keeps track of loops passed since last pose change
+        self.angle_not_changed = 0
+        self.dist_not_changed = 0
+        self.goal_not_changed = 0
+        self.goal_not_changed_long = 0
+        self.backpedaling  = 0
+
+        self.trigger_backpedaling = False
+        self.trigger_nxtpt = False
 
     #common w/ gotogoal
     @staticmethod
@@ -161,6 +175,65 @@ class bot_motionplanner():
         else:
             return (angle_deg + 360),distance
 
+    def check_gtg_status(self, angle_to_turn, distance_to_goal):
+
+        #change in angle over last iteration
+        change_angle_to_turn = abs(angle_to_turn-self.prev_angle_to_turn)
+        if((abs(angle_to_turn)>5) and (change_angle_to_turn<0.4) and (not self.trigger_backpedaling)):
+            self.angle_not_changed += 1
+            #if angle is not changed for a while, trigger backpedaling
+            if(self.angle_not_changed>200):
+                self.trigger_backpedaling = True
+        else:
+            self.angle_not_changed = 0
+        print("[prev,change,not_changed_iter,self.trigger_backpedaling] = [{:.1f},{:.1f},{},{}]"
+        .format(self.prev_angle_to_turn,change_angle_to_turn,self.angle_not_changed,self.trigger_backpedaling))
+        self.prev_angle_to_turn = angle_to_turn
+
+        change_dist = abs(distance_to_goal - self.Prev_distance_to_goal)
+
+        if((abs(distance_to_goal)>5) and (change_dist<1.2) and (not self.trigger_backpedaling)):
+            self.dist_not_changed += 1
+            #For a significant time dist is not changed
+            if (self.dist_not_changed>100):
+                self.trigger_backpedaling = True
+        else:
+            self.dist_not_changed = 0
+        print("[prev_d,change_d,not_changed_iter,self.trigger_backpedaling] = [{:.1f},{:.1f},{},{}] "
+        .format(self.Prev_distance_to_goal,change_dist,self.dist_not_changed,self.trigger_backpedaling))
+        self.Prev_distance_to_goal = distance_to_goal  
+
+        change_goal = self.prev_path_iter - self.path_iter
+
+        if ((change_goal==0) and (distance_to_goal<30)):
+            self.goal_not_changed += 1
+            #for significant time goal not changed, trigger nxtpt
+            if(self.goal_not_changed>500):
+                self.trigger_nxtpt = True
+        #If mini goal is not changing for a long time
+        else:
+            self.goal_not_changed_long = 0
+            self.goal_not_changed = 0
+        print("[prev_g,change_g,not_changed_iter] = [{:.1f},{:.1f},{}] "
+        .format(self.prev_path_iter,change_goal,self.goal_not_changed))
+        self.prev_path_iter = self.path_iter
+
+    @staticmethod
+    def dist(pt_a, pt_b):
+        error_x = pt_b[0] - pt_a[0]
+        error_y = pt_a[1] - pt_b[1]
+        return (sqrt(pow((error_x),2) + pow((error_y),2)))
+    
+    def get_suitable_nxtpt(self, car_loc, path):
+        extra_i = 1
+        test_goal = path[self.path_iter+extra_i]
+
+        while(self.dist(car_loc, test_goal)<20):
+            extra_i+=1
+            test_goal = path[self.path_iter+extra_i]
+        print("Loading {} pt".format(extra_i))
+        self.path_iter = self.path_iter + extra_i - 1
+
     def go_to_goal(self, bot_loc, path, velocity, velocity_publisher):
         angle_to_goal,distance_to_goal = self.angle_n_dist(bot_loc, (self.goal_pose_x,self.goal_pose_y))
         angle_to_turn = angle_to_goal - self.bot_angle
@@ -172,6 +245,9 @@ class bot_motionplanner():
 
         print("Angle_2_Goal: {} Angle_2_Turn: {} Angle[Sim]: {}".format(angle_to_goal,angle_to_turn,abs(angle)))
         print("Distance_2_Goal: ",distance_to_goal)
+
+        if self.goal_not_reached_flag:
+            self.check_gtg_status(angle_to_turn, distance_to_goal)
 
         #If car is far away, turn towards goal
         if (distance_to_goal >= 2):
@@ -185,6 +261,20 @@ class bot_motionplanner():
         else:
             velocity.linear.x = 0.0
 
+        #Backpedal trigger
+        if self.trigger_backpedaling:
+            print("------- Backpedaling: ", self.backpedaling, " -----------")
+            if self.backpedaling == 0:
+                self.trigger_nxtpt = True
+            velocity.linear.x = -0.16
+            velocity.angular.z = angle
+            self.backpedaling += 1
+            #Stop after 100 iterations
+            if self.backpedaling == 100:
+                self.trigger_backpedaling = False
+                self.backpedaling = 0
+                print("------- Backpedaling Done -----------")
+
         #Keep publishing vel until reaching end
         if(self.goal_not_reached_flag) or (distance_to_goal<=1):
             velocity_publisher.publish(velocity)
@@ -192,7 +282,13 @@ class bot_motionplanner():
         #print("Total Vertices = ( {} ) , Current Vertex Target = ( {} )".format(len(path), self.path_iter))
 
         #If car is within reasonable distance of mini goal
-        if((distance_to_goal <= 8)):
+        if((distance_to_goal <= 8) or self.trigger_nxtpt):
+            if self.trigger_nxtpt:
+                if self.backpedaling:
+                    #Look for appropriate mini-goal
+                    self.get_suitable_nxtpt(bot_loc, path)
+                self.trigger_nxtpt = False
+
             velocity.linear.x = 0.0
             velocity.angular.z = 0.0
             if self.goal_not_reached_flag:
